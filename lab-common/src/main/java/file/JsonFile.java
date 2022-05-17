@@ -7,10 +7,11 @@ import exceptions.JsonWritingException;
 import io.JsonString;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Set;
 
-public class JsonFile {
+public class JsonFile implements Serializable {
     private final TextFile textFile;
 
     public JsonFile(TextFile textFile) {

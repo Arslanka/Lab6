@@ -6,8 +6,9 @@ import io.Printer;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.Serializable;
 
-public class FileManager {
+public class FileManager implements Serializable {
     private final String fileName;
     private final Printer printer;
 

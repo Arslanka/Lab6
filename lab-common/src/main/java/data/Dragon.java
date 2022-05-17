@@ -5,12 +5,12 @@ import exceptions.InvalidObjectFieldException;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
-import java.util.Objects;
+import java.util.*;
 
 
 public class Dragon implements Comparable<Dragon>, Serializable {
 
-    private Integer id = Collection.mex();
+    private Integer id;
     ;//Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     private String name; //Поле не может быть null, Строка не может быть пустой
     private Coordinates coordinates; //Поле не может быть null
@@ -139,6 +139,11 @@ public class Dragon implements Comparable<Dragon>, Serializable {
 
         public Builder withCreationDate() {
             newDragon.setCreationDate();
+            return this;
+        }
+
+        public Builder withId() {
+            newDragon.setId(this.build().id);
             return this;
         }
 

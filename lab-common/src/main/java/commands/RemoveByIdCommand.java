@@ -1,14 +1,13 @@
 package commands;
 
 import collection.Collection;
-import exceptions.ExecutionException;
 import exceptions.IncorrectIdException;
-import io.ClientApplication;
-import io.ConsoleColor;
 import io.Printer;
 import util.Response;
 
 import java.io.Serializable;
+
+import static io.ConsoleColor.ERROR;
 
 public class RemoveByIdCommand implements Command, Serializable {
     private final Collection collection;
@@ -22,16 +21,15 @@ public class RemoveByIdCommand implements Command, Serializable {
 
     @Override
     public Response execute(Object... args) {
+        StringBuilder builder = new StringBuilder();
         try {
-            collection.removeById((Integer) args[0]);
-            printer.println("An element whose id field value is equivalent to the specified " + args[0] + " has been successfully removed from the collection", ConsoleColor.HELP);
-            printer.println(ClientApplication.SEPARATOR, ConsoleColor.ERROR);
+            builder.append(collection.removeById((Integer) args[0]));
         } catch (ArrayIndexOutOfBoundsException e) {
-            throw new ExecutionException("You have not entered an id to remove from the collection.");
+            builder.append(ERROR.wrapped("You have not entered an id to remove from the collection.\n"));
         } catch (IncorrectIdException e) {
-            throw new ExecutionException("Deleting an element by id error.\n" + e.getMessage());
+            builder.append(ERROR.wrapped("Deleting an element by id error.\n" + e.getMessage() + '\n'));
         }
-        return null;
+        return new Response(builder.toString());
     }
 
     @Override

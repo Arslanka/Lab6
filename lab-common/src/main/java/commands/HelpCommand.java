@@ -1,12 +1,12 @@
 package commands;
 
-import io.ClientApplication;
-import io.ConsoleColor;
 import io.Printer;
 import util.Response;
 
 import java.io.Serializable;
 import java.util.Map;
+
+import static io.ConsoleColor.HELP;
 
 public class HelpCommand implements Command, Serializable {
     private final Printer printer;
@@ -19,11 +19,11 @@ public class HelpCommand implements Command, Serializable {
 
     @Override
     public Response execute(Object... args) {
+        StringBuilder builder = new StringBuilder();
         for (String entry : commandMap.keySet()) {
-            printer.println((String.format("%-30s", entry) + " " + commandMap.get(entry).getDescription()), ConsoleColor.HELP);
+            builder.append(HELP.wrapped(String.format("%-30s", entry) + " " + commandMap.get(entry).getDescription())).append('\n');
         }
-        printer.println(ClientApplication.SEPARATOR, ConsoleColor.ERROR);
-        return null;
+        return new Response(builder.toString());
     }
 
     @Override

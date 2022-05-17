@@ -6,6 +6,7 @@ import data.DragonType;
 import exceptions.InvalidObjectFieldException;
 import io.InputData;
 import io.Printer;
+import util.RequestElement;
 
 import java.util.Scanner;
 

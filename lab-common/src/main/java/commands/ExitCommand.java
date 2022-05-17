@@ -1,11 +1,11 @@
 package commands;
 
-import io.ConsoleColor;
 import io.Printer;
-import util.Request;
 import util.Response;
 
 import java.io.Serializable;
+
+import static io.ConsoleColor.ERROR;
 
 public class ExitCommand implements Command, Serializable {
     private final Printer printer;
@@ -17,8 +17,8 @@ public class ExitCommand implements Command, Serializable {
 
     @Override
     public Response execute(Object... args) {
-        printer.println("The program is completed", ConsoleColor.ERROR);
-        return null;
+        return new Response(ERROR.wrapped("The program is completed"), "exit");
+
     }
 
     @Override

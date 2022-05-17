@@ -2,27 +2,35 @@ package util;
 
 import collection.Collection;
 import commands.*;
-import data.Coordinates;
-import data.Dragon;
-import data.Location;
-import data.Person;
 import file.FileManager;
+import file.JsonFile;
+import file.TextFile;
 import io.InputData;
 import io.Printer;
-import io.request.*;
 
+import java.io.File;
+import java.lang.ref.ReferenceQueue;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
+
+import static io.ConsoleColor.ERROR;
+import static io.ConsoleColor.REQUEST;
 
 public class ServerApplication {
     public static final String SEPARATOR = "-----------------------";
 
     private final Scanner sc = new Scanner(System.in);
     private final Map<String, Command> commandsByName = new HashMap<>();
-    private Printer printer;
-    private String[] fileName;
-    private Collection collection;
+    private final Printer printer;
+    private final String[] fileName;
+    private final Collection collection;
+    private Supplier<?> supplier;
+    private UDPServer udpServer;
 
     public ServerApplication(String[] fileName, Collection collection, Printer printer) {
         this.fileName = fileName;
@@ -31,10 +39,38 @@ public class ServerApplication {
         fillCommands();
     }
 
+    public void run() {
+        try {
+            String fileName = this.fileName[0];
+            final File file = new File(fileName.trim());
+            final TextFile textFile = new TextFile(file);
+            final JsonFile jsonFile = new JsonFile(textFile);
+            printer.println(collection.add(jsonFile.read()));
+            connection();
+            while (!udpServer.wasExit()) {
+                Thread thread = new Thread(() -> {
+                    while (!udpServer.wasExit()) {
+                        udpServer.receive();
+                    }
+                    udpServer.disconnect();
+                });
+                thread.setDaemon(true);
+                thread.start();
+                String message = sc.nextLine();
+                udpServer.execute(message);
+            }
+        } catch (NoSuchElementException e) {
+            printer.println("The program ended incorrectly. Please restart the program.", ERROR);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            printer.println("You didn't specify the file name to populate the collection", ERROR);
+        } catch (Exception e) {
+            printer.println(e.getMessage(), ERROR);
+        }
+    }
 
     public void fillCommands() {
         RequestElement requestElement = new RequestElement();
-        InputData inputData = new InputData();
+        InputData data = new InputData();
         commandsByName.put("help", new HelpCommand(new Printer(false), commandsByName));
         commandsByName.put("exit", new ExitCommand(new Printer(false)));
         commandsByName.put("info", new InfoCommand(collection, printer));
@@ -43,23 +79,31 @@ public class ServerApplication {
         commandsByName.put("update", new UpdateIdCommand(collection, printer));
         commandsByName.put("remove_by_id", new RemoveByIdCommand(collection, printer));
         commandsByName.put("clear", new ClearCommand(collection, printer));
-        commandsByName.put("save", new SaveCommand(collection, printer));
-//        commandsByName.put("execute_script", new ExecuteScriptCommand());
-//        supplierMap.put("execute_script",
-//                () -> new Object[]{new AdvancedScript(
-//                        new FileManager(requestElement
-//                                .get("Enter the name of the script:", sc, printer, inputData::getFileName, false), printer)
-//                                .getTextFileByName(), commandsByName, supplierMap, requestMap, printer)});
         commandsByName.put("add_if_max", new AddIfMaxCommand(collection, printer));
         commandsByName.put("remove_greater", new RemoveGreaterCommand(collection, printer));
         commandsByName.put("remove_lower", new RemoveLowerCommand(collection, printer));
         commandsByName.put("remove_all_by_weight", new RemoveAllByWeight(collection, printer));
         commandsByName.put("count_greater_than_killer", new CountGreaterThanKillerCommand(collection, printer));
         commandsByName.put("filter_greater_than_age", new FilterGreaterThanAgeCommand(collection, printer));
+        supplier = () -> new FileManager(requestElement.get("Enter the file name:", sc, printer,
+                data::getFileName, false), printer).getJsonFileByName();
     }
 
-    public Map<String, Command> getCommandsByName() {
-        return commandsByName;
+    private void connection() {
+        try {
+            printer.println("Enter the host name:", REQUEST);
+            String hostName = sc.nextLine();
+            printer.println("Enter the port:", REQUEST);
+            int port = Integer.parseInt(sc.nextLine());
+            udpServer = new UDPServer(port, hostName, printer, commandsByName, sc, collection, supplier);
+            udpServer.connect();
+        } catch (InputMismatchException | NumberFormatException | UnknownHostException e) {
+            printer.println("You have entered the wrong port or host", ERROR);
+            connection();
+        } catch (SocketException e) {
+            printer.println(e.getMessage(), ERROR);
+            connection();
+        }
     }
 
 }

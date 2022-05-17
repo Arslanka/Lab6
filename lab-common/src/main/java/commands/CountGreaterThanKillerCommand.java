@@ -3,13 +3,12 @@ package commands;
 
 import collection.Collection;
 import data.Person;
-import exceptions.ExecutionException;
-import io.ClientApplication;
-import io.ConsoleColor;
 import io.Printer;
 import util.Response;
 
 import java.io.Serializable;
+
+import static io.ConsoleColor.ERROR;
 
 public class CountGreaterThanKillerCommand implements Command, Serializable {
     private final Collection collection;
@@ -22,14 +21,14 @@ public class CountGreaterThanKillerCommand implements Command, Serializable {
 
     @Override
     public Response execute(Object... args) {
+        StringBuilder builder = new StringBuilder();
         try {
             Person person = (Person) args[0];
-            collection.countGreaterThanKiller(person);
-            printer.println(ClientApplication.SEPARATOR, ConsoleColor.ERROR);
+            builder.append(collection.countGreaterThanKiller(person));
         } catch (ArrayIndexOutOfBoundsException e) {
-            throw new ExecutionException("You have not entered an item to add to the collection.");
+            builder.append(ERROR.wrapped("You have not entered an item to add to the collection."));
         }
-        return null;
+        return new Response(builder.toString());
     }
 
     @Override

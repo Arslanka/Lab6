@@ -3,6 +3,7 @@ package io.request;
 import data.Location;
 import io.InputData;
 import io.Printer;
+import util.RequestElement;
 
 import java.util.Scanner;
 

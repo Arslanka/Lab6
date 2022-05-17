@@ -1,15 +1,10 @@
 package commands;
 
 import collection.Collection;
-import io.ClientApplication;
-import io.ConsoleColor;
 import io.Printer;
 import util.Response;
 
 import java.io.Serializable;
-
-import static io.ConsoleColor.ERROR;
-import static io.ConsoleColor.HELP;
 
 public class ClearCommand implements Command, Serializable {
     private final Collection collection;
@@ -22,11 +17,7 @@ public class ClearCommand implements Command, Serializable {
 
     @Override
     public Response execute(Object... args) {
-        StringBuilder builder = new StringBuilder();
-        collection.clear();
-        builder.append(HELP.wrapped("The collection has been cleared\n"));
-        builder.append(ERROR.wrapped(ClientApplication.SEPARATOR));
-        return new Response(builder.toString());
+        return new Response(collection.clear());
     }
 
     @Override

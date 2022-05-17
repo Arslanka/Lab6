@@ -12,9 +12,17 @@ public class Response implements Serializable {
         this.args = args;
     }
 
+    public Response(String responseMessage) {
+        this.responseMessage = responseMessage;
+    }
+
 
     public String getMessage() {
         return this.responseMessage;
+    }
+
+    public boolean wasExit() {
+        return "exit".equals(responseMessage);
     }
 
     public Object[] getArgs() {

@@ -32,5 +32,10 @@ public class Printer implements Serializable {
             System.out.println(color.wrapped(obj.toString()));
     }
 
+    public void println(Object obj) {
+        if (!scriptMode)
+            System.out.println(obj.toString());
+    }
+
 
 }

@@ -1,0 +1,98 @@
+[
+  {
+    "id": 4,
+    "name": "123",
+    "coordinates": {
+      "x": 412,
+      "y": 500.0
+    },
+    "creationDate": "2022-05-17T10:34:36.513+03:00[Europe/Moscow]",
+    "age": 18,
+    "weight": 1010.0,
+    "color": "GREEN",
+    "type": "FIRE",
+    "killer": {
+      "name": "lox",
+      "birthday": "2011-12-03T10:15:30+01:00",
+      "nationality": "GERMANY",
+      "location": {
+        "x": 10,
+        "y": 20,
+        "z": 30,
+        "name": "Alpi"
+      }
+    }
+  },
+  {
+    "id": 10,
+    "name": "1",
+    "coordinates": {
+      "x": 12312,
+      "y": 500.1
+    },
+    "creationDate": "2022-05-17T10:34:36.514+03:00[Europe/Moscow]",
+    "age": 1,
+    "weight": 11.0,
+    "color": "GREEN",
+    "type": "WATER",
+    "killer": {
+      "name": "1",
+      "birthday": "2011-12-03T10:15:30+04:00[Europe/Moscow]",
+      "nationality": "GERMANY",
+      "location": {
+        "x": 11,
+        "y": 1,
+        "z": 1,
+        "name": "1"
+      }
+    }
+  },
+  {
+    "id": 3,
+    "name": "Roma",
+    "coordinates": {
+      "x": 412,
+      "y": 23.0
+    },
+    "creationDate": "2022-05-17T10:34:36.514+03:00[Europe/Moscow]",
+    "age": 23,
+    "weight": 65.5,
+    "color": "GREEN",
+    "type": "AIR",
+    "killer": {
+      "name": "Vlad",
+      "birthday": "2011-12-03T10:15:30+01:00",
+      "nationality": "GERMANY",
+      "location": {
+        "x": 10,
+        "y": 20,
+        "z": 30,
+        "name": "Alpi"
+      }
+    }
+  },
+  {
+    "id": 1,
+    "name": "1010",
+    "coordinates": {
+      "x": 123,
+      "y": 444.0
+    },
+    "creationDate": "2022-05-17T10:34:36.514+03:00[Europe/Moscow]",
+    "age": 18,
+    "weight": 65.5,
+    "color": "GREEN",
+    "type": "FIRE",
+    "killer": {
+      "name": "Zhenya",
+      "birthday": "2011-12-03T10:15:30+01:00",
+      "nationality": "GERMANY",
+      "location": {
+        "x": 10,
+        "y": 20,
+        "z": 30,
+        "name": "Alpi"
+      }
+    }
+  }
+]

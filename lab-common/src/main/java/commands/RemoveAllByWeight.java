@@ -1,13 +1,12 @@
 package commands;
 
 import collection.Collection;
-import exceptions.ExecutionException;
-import io.ClientApplication;
-import io.ConsoleColor;
 import io.Printer;
 import util.Response;
 
 import java.io.Serializable;
+
+import static io.ConsoleColor.ERROR;
 
 public class RemoveAllByWeight implements Command, Serializable {
     private final Collection collection;
@@ -20,16 +19,14 @@ public class RemoveAllByWeight implements Command, Serializable {
 
     @Override
     public Response execute(Object... args) {
+        StringBuilder builder = new StringBuilder();
         try {
             Float weight = (Float) args[0];
-            collection.removeByWeight(weight);
-            printer.println(String.format("%s %f %s", "Elements whose weight field value is equivalent to", weight, "the specified one have been successfully removed from the collection"), ConsoleColor.HELP);
-            printer.println(ClientApplication.SEPARATOR, ConsoleColor.ERROR);
-
+            builder.append(collection.removeByWeight(weight));
         } catch (ArrayIndexOutOfBoundsException e) {
-            throw new ExecutionException("You have not entered an item to add to the collection.");
+            builder.append(ERROR.wrapped("You have not entered an item to add to the collection."));
         }
-        return null;
+        return new Response(builder.toString());
     }
 
     @Override

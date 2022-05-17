@@ -3,12 +3,12 @@ package commands;
 import collection.Collection;
 import data.Dragon;
 import exceptions.ExecutionException;
-import io.ClientApplication;
-import io.ConsoleColor;
 import io.Printer;
 import util.Response;
 
 import java.io.Serializable;
+
+import static io.ConsoleColor.ERROR;
 
 public class UpdateIdCommand implements Command, Serializable {
     private final Collection collection;
@@ -22,15 +22,17 @@ public class UpdateIdCommand implements Command, Serializable {
 
     @Override
     public Response execute(Object... args) {
+        StringBuilder builder = new StringBuilder();
         try {
-            collection.updateId((Integer) args[0], (Dragon) args[1]);
-            printer.println("Collection item with id " + args[0] + " successfully updated ", ConsoleColor.HELP);
-            printer.println(ClientApplication.SEPARATOR, ConsoleColor.ERROR);
+            builder.append(collection.updateId((Integer) args[0], (Dragon) args[1]));
         } catch (ArrayIndexOutOfBoundsException e) {
-            throw new ExecutionException("You have not entered an item to add to the collection.");
+            builder.append(ERROR.wrapped("You have not entered an item to add to the collection."));
+        } catch (ExecutionException e) {
+            builder.append(ERROR.wrapped(e.getMessage()));
         }
-        return null;
+        return new Response(builder.toString());
     }
+
 
     @Override
     public boolean withArgument() {

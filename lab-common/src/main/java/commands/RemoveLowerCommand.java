@@ -2,13 +2,12 @@ package commands;
 
 import collection.Collection;
 import data.Dragon;
-import exceptions.ExecutionException;
-import io.ClientApplication;
-import io.ConsoleColor;
 import io.Printer;
 import util.Response;
 
 import java.io.Serializable;
+
+import static io.ConsoleColor.ERROR;
 
 public class RemoveLowerCommand implements Command, Serializable {
     private final Collection collection;
@@ -21,14 +20,15 @@ public class RemoveLowerCommand implements Command, Serializable {
 
     @Override
     public Response execute(Object... args) {
+        StringBuilder builder = new StringBuilder();
         try {
-            collection.removeLower((Dragon) args[0]);
-            printer.println("Elements whose value is lower than the specified value have been successfully removed from the collection", ConsoleColor.HELP);
-            printer.println(ClientApplication.SEPARATOR, ConsoleColor.ERROR);
+            Dragon dragon = (Dragon) args[0];
+            dragon.setId(Collection.mex());
+            builder.append(collection.removeLower((Dragon) args[0]));
         } catch (ArrayIndexOutOfBoundsException e) {
-            throw new ExecutionException("You have not entered an element for comparison.");
+            builder.append(ERROR.wrapped("You have not entered an element for comparison.\n"));
         }
-        return null;
+        return new Response(builder.toString());
     }
 
     @Override

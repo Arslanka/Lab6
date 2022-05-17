@@ -1,4 +1,4 @@
-package io.request;
+package util;
 
 import exceptions.InvalidObjectFieldException;
 import io.Printer;

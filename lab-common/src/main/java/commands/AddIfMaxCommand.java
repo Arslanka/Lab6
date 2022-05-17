@@ -2,13 +2,12 @@ package commands;
 
 import collection.Collection;
 import data.Dragon;
-import exceptions.ExecutionException;
-import io.ClientApplication;
-import io.ConsoleColor;
 import io.Printer;
 import util.Response;
 
 import java.io.Serializable;
+
+import static io.ConsoleColor.ERROR;
 
 public class AddIfMaxCommand implements Command, Serializable {
     private final Collection collection;
@@ -22,15 +21,15 @@ public class AddIfMaxCommand implements Command, Serializable {
 
     @Override
     public Response execute(Object... args) {
+        StringBuilder builder = new StringBuilder();
         try {
             Dragon dragon = (Dragon) args[0];
-            collection.addIfMax(dragon);
-            printer.println("The item was successfully added to the collection", ConsoleColor.HELP);
-            printer.println(ClientApplication.SEPARATOR, ConsoleColor.ERROR);
+            dragon.setId(Collection.mex());
+            builder.append(collection.addIfMax(dragon));
         } catch (ArrayIndexOutOfBoundsException e) {
-            throw new ExecutionException("You have not entered an item to add to the collection.");
+            builder.append(ERROR.wrapped("You have not entered an item to add to the collection."));
         }
-        return null;
+        return new Response(builder.toString());
     }
 
     @Override

@@ -1,13 +1,12 @@
 package commands;
 
 import collection.Collection;
-import exceptions.ExecutionException;
-import io.ClientApplication;
-import io.ConsoleColor;
 import io.Printer;
 import util.Response;
 
 import java.io.Serializable;
+
+import static io.ConsoleColor.ERROR;
 
 public class FilterGreaterThanAgeCommand implements Command, Serializable {
     private final Collection collection;
@@ -20,14 +19,14 @@ public class FilterGreaterThanAgeCommand implements Command, Serializable {
 
     @Override
     public Response execute(Object... args) {
+        StringBuilder builder = new StringBuilder();
         try {
             Long age = (Long) args[0];
-            collection.filterGreaterThanAge(age);
-            printer.println(ClientApplication.SEPARATOR, ConsoleColor.ERROR);
+            builder.append(collection.filterGreaterThanAge(age));
         } catch (ArrayIndexOutOfBoundsException e) {
-            throw new ExecutionException("You have not entered an element to filter by collection.");
+            builder.append(ERROR.wrapped("You have not entered an element to filter by collection."));
         }
-        return null;
+        return new Response(builder.toString());
     }
 
     @Override

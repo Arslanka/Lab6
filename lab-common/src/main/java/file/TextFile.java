@@ -10,7 +10,7 @@ import io.Writeable;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
-public class TextFile implements Readable, Writeable {
+public class TextFile implements Readable, Writeable, Serializable {
     private final File file;
     private static final int MAX_FILE_LENGTH = 10000;
 

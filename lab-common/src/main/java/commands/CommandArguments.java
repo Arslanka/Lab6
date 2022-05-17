@@ -2,10 +2,11 @@ package commands;
 
 
 import com.google.gson.JsonParseException;
-import file.JsonFile;
+import execute.AdvancedScript;
 import file.TextFile;
 import io.JsonString;
 import io.Printer;
+import io.UDPClient;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,23 +23,31 @@ public class CommandArguments implements Serializable {
     private String[] args;
     private final Map<String, Supplier<Object[]>> stringSupplierMap;
     private Map<Class<?>, BiFunction<Scanner, Printer, Object>> requestMap;
-    private Printer printer;
-    private Command command;
+    private final Map<String, Class<?>[]> commandArguments;
+    private final Printer printer;
 
-    public CommandArguments(String commandAsString, Map<String, Supplier<Object[]>> stringSupplierMap) {
+    public CommandArguments(String commandAsString, Map<String, Supplier<Object[]>> stringSupplierMap, Map<String, Class<?>[]> commandArgs, Printer printer) {
         this.commandAsString = commandAsString;
         this.stringSupplierMap = stringSupplierMap;
+        this.commandArguments = commandArgs;
+        this.printer = printer;
     }
 
-    public CommandArguments(Map<String, Supplier<Object[]>> stringSupplierMap, String... args) {
+    public CommandArguments(Map<String, Supplier<Object[]>> stringSupplierMap, Map<String, Class<?>[]> commandArgs, Printer printer, String... args) {
         this.args = args;
         this.stringSupplierMap = stringSupplierMap;
+        this.commandArguments = commandArgs;
+        this.printer = printer;
     }
 
-    public CommandArguments(Map<String, Supplier<Object[]>> stringSupplierMap, Map<Class<?>, BiFunction<Scanner, Printer, Object>> requestMap, String commandAsString) {
+    public CommandArguments(Map<String, Supplier<Object[]>> stringSupplierMap, Map<Class<?>,
+            BiFunction<Scanner, Printer, Object>> requestMap,
+                            Map<String, Class<?>[]> commandArgs, String commandAsString, Printer printer) {
         this.stringSupplierMap = stringSupplierMap;
         this.commandAsString = commandAsString;
         this.requestMap = requestMap;
+        this.printer = printer;
+        this.commandArguments = commandArgs;
     }
 
     public Object[] get() {
@@ -46,24 +55,18 @@ public class CommandArguments implements Serializable {
     }
 
     public Object[] get(ArrayList<String> data) {
-        Class<?>[] commandArgsClasses = command.getArgumentsClasses();
+        Class<?>[] commandArgsClasses = commandArguments.get(commandAsString);
         ArrayList<Object> commandArgs = new ArrayList<>();
         int start = 0;
         for (Class<?> arg : commandArgsClasses) {
             StringBuilder argAsString = new StringBuilder();
             JsonString jsonString = new JsonString();
-            if (command instanceof SaveCommand) { //todo fix instanceof + open/closed
+            if ("execute_script".equals(commandAsString)) {
                 try {
-                    commandArgs.add(new JsonFile(new TextFile(new File(data.get(0).trim()))));
+                    commandArgs.add(new AdvancedScript(new TextFile(new File(data.get(0).trim())), commandArguments, stringSupplierMap, requestMap, printer).execute((UDPClient) stringSupplierMap.get("script").get()[0]));
                     break;
                 } catch (ClassCastException | JsonParseException | IOException ignored) {
                 }
-//            } else if (command instanceof ExecuteScriptCommand) {
-//                try {
-//                    commandArgs.add(new AdvancedScript(new TextFile(new File(data.get(0).trim())), commandsByName, stringSupplierMap, requestMap, printer));
-//                    break;
-//                } catch (ClassCastException | JsonParseException | IOException ignored) {
-//                }
             } else {
                 for (; start < data.size(); ++start) {
                     argAsString.append(data.get(start)).append('\n');
@@ -84,9 +87,8 @@ public class CommandArguments implements Serializable {
             }
         }
         if (commandArgs.size() != commandArgsClasses.length && !data.toString().isEmpty()) {
-            throw new JsonParseException("You have entered incorrect arguments in the command " + command.getName());
+            throw new JsonParseException("You have entered incorrect arguments in the command " + commandAsString);
         }
         return commandArgs.toArray();
     }
-
 }

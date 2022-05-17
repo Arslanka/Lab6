@@ -1,10 +1,7 @@
 package commands;
 
 import collection.Collection;
-import io.ClientApplication;
-import io.ConsoleColor;
 import io.Printer;
-import util.Request;
 import util.Response;
 
 import java.io.Serializable;
@@ -21,9 +18,7 @@ public class ShowCommand implements Command, Serializable {
 
     @Override
     public Response execute(Object... args) {
-        collection.show();
-        printer.println(ClientApplication.SEPARATOR, ConsoleColor.ERROR);
-        return null;
+        return new Response(collection.show());
     }
 
     @Override

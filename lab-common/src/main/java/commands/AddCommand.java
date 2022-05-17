@@ -2,17 +2,14 @@ package commands;
 
 import collection.Collection;
 import data.Dragon;
-import exceptions.ExecutionException;
 import exceptions.ExistingIdException;
 import exceptions.InvalidObjectFieldException;
-import io.ClientApplication;
-import io.ConsoleColor;
 import io.Printer;
 import util.Response;
 
 import java.io.Serializable;
 
-import static io.ConsoleColor.*;
+import static io.ConsoleColor.ERROR;
 
 public class AddCommand implements Command, Serializable {
     private final Collection collection;
@@ -29,12 +26,11 @@ public class AddCommand implements Command, Serializable {
         StringBuilder builder = new StringBuilder();
         try {
             Dragon dragon = (Dragon) args[0];
-            collection.add(dragon);
-            builder.append(HELP.wrapped("The item was successfully added to the collection\n"));
-            builder.append(ERROR.wrapped(ClientApplication.SEPARATOR));
+            dragon.setId(Collection.mex());
+            builder.append(collection.add(dragon));
         } catch (ArrayIndexOutOfBoundsException e) {
             builder.append(ERROR.wrapped("You have not entered an item to add to the collection.\n"));
-        } catch (InvalidObjectFieldException e) {
+        } catch (InvalidObjectFieldException | ExistingIdException e) {
             builder.append(ERROR.wrapped("Error executing the add command\n" + e.getMessage() + '\n'));
         }
         return new Response(builder.toString());

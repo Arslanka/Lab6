@@ -1,8 +1,6 @@
 package commands;
 
 import collection.Collection;
-import io.ClientApplication;
-import io.ConsoleColor;
 import io.Printer;
 import util.Response;
 
@@ -20,9 +18,7 @@ public class InfoCommand implements Command, Serializable {
 
     @Override
     public Response execute(Object... args) {
-        collection.info();
-        printer.println(ClientApplication.SEPARATOR, ConsoleColor.ERROR);
-        return null;
+        return new Response(collection.info());
     }
 
     @Override
