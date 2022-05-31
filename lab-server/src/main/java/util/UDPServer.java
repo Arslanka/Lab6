@@ -88,11 +88,18 @@ public class UDPServer {
 
     public void execute(Object obj) {
         if ("exit".equals(obj)) wasExit = true;
-        try {
-            printer.println(collection.save((JsonFile) saveSupplier.get()), HELP);
-        } catch (Exception e) {
-            printer.println(e.getMessage(), ERROR);
-            execute(obj);
+        if ("exit".equals(obj) || "save".equals(obj)) {
+            boolean saved = false;
+            while (!saved) {
+                try {
+                    printer.println(collection.save((JsonFile) saveSupplier.get()), HELP);
+                    saved = true;
+                } catch (Exception e) {
+                    printer.println(e.getMessage(), ERROR);
+                }
+            }
+        } else {
+            printer.println(String.format("%s %s", "There is no command with name", obj.toString()), ERROR);
         }
     }
 

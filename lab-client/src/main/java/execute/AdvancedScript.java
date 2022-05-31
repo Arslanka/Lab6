@@ -97,7 +97,7 @@ public class AdvancedScript {
 
     private void interpreter(ArrayList<String> data, String lastCommand, CommandInterpreter commandInterpreter, UDPClient client, Printer printer) {
         ArrayList<String> list = new ArrayList<>();
-        if (commandMap.get(lastCommand).length != 0) {
+        if (commandMap.get(lastCommand).length == 0) {
             if (!data.isEmpty()) {
                 executableScripts.remove(this.textFile.getFile());
                 throw new ExecutionException("You have entered incorrect data for the script");

@@ -53,6 +53,8 @@ public class UDPClient {
             printer.println(ERROR.wrapped("The specified connection port is busy, specify another port"));
         } catch (IOException e) {
             printer.println(ERROR.wrapped("Something went wrong when connecting to the server"));
+        } catch (IllegalArgumentException e) {
+            printer.println(e.getMessage(), ERROR);
         }
         isAvailable = true;
         printer.println("You have successfully connected to the host " + hostname + " with port " + port, HELP);

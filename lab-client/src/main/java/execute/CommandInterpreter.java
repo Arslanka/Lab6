@@ -49,7 +49,7 @@ public class CommandInterpreter {
                 commandWithArgs.remove(0);
                 return new Request(commandName, new CommandArguments(supplierMap, requestMap, commandArgs, commandName, printer).get(commandWithArgs));
             } else
-                return new Request(scriptArgs);
+                return new Request(commandName, scriptArgs);
         } catch (ExistingIdException | InputOutputException | IncorrectIdException | ObjectBuildException | ExecutionException e) {
             printer.println(e.getMessage(), ERROR);
         }

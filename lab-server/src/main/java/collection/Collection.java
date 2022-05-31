@@ -33,7 +33,6 @@ public class Collection implements Serializable {
         try {
             if (dragon.validated() != null)
                 if (idMap.containsKey(dragonId))
-                    if (idMap.containsKey(dragonId))
                         throw new ExistingIdException(String
                                 .format("%s %d %s", "There is already an object with id ", dragonId, "in the collection"));
             idMap.put(dragonId, dragon);

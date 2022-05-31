@@ -1,6 +1,7 @@
 package io;
 
 import com.google.gson.JsonParseException;
+import com.sun.tools.hat.internal.parser.HprofReader;
 import data.Coordinates;
 import data.Dragon;
 import data.Location;
@@ -134,15 +135,14 @@ public class ClientApplication implements Serializable {
     private void connection() {
         while (true) {
             try {
-                printer.print("Enter the host name:", REQUEST);
+                printer.println("Enter the host name:", REQUEST);
                 String hostName = sc.nextLine();
-                printer.print("Enter the port:", REQUEST);
-                int port = sc.nextInt();
-                sc.nextLine();
+                printer.println("Enter the port:", REQUEST);
+                int port = Integer.parseInt(sc.nextLine());
                 udpClient = new UDPClient(hostName, port, printer);
                 udpClient.connect();
                 if (udpClient.isAvailable()) return;
-            } catch (InputMismatchException | NumberFormatException e) {
+            } catch (IllegalArgumentException | InputMismatchException e) {
                 printer.println("You have entered an incorrect data type", ERROR);
             }
         }

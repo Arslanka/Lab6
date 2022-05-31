@@ -22,7 +22,6 @@ import static io.ConsoleColor.ERROR;
 import static io.ConsoleColor.REQUEST;
 
 public class ServerApplication {
-    public static final String SEPARATOR = "-----------------------";
 
     private final Scanner sc = new Scanner(System.in);
     private final Map<String, Command> commandsByName = new HashMap<>();
@@ -100,7 +99,7 @@ public class ServerApplication {
         } catch (InputMismatchException | NumberFormatException | UnknownHostException e) {
             printer.println("You have entered the wrong port or host", ERROR);
             connection();
-        } catch (SocketException e) {
+        } catch (IllegalArgumentException | SocketException e) {
             printer.println(e.getMessage(), ERROR);
             connection();
         }
